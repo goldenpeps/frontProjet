@@ -1,0 +1,208 @@
+.navbar {
+  background-color: #ffffff;
+  border-bottom: 3px solid #87A515;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 68px;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logoIcon {
+  font-size: 28px;
+}
+
+.logoText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  color: #418123;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.logoTagline {
+  font-size: 11px;
+  font-weight: 400;
+  color: #87A515;
+  font-style: italic;
+}
+
+.logo:hover .logoText {
+  color: #87A515;
+}
+
+/* Burger menu button (mobile) */
+.burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  z-index: 1001;
+}
+
+.burger span {
+  display: block;
+  width: 26px;
+  height: 3px;
+  background-color: #418123;
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.burgerOpen span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.burgerOpen span:nth-child(2) {
+  opacity: 0;
+}
+
+.burgerOpen span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Nav links */
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #555;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.navIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.navLink:hover {
+  background-color: rgba(135, 165, 21, 0.12);
+  color: #418123;
+}
+
+.active {
+  background-color: #87A515;
+  color: #ffffff;
+}
+
+.active:hover {
+  background-color: #418123;
+  color: #ffffff;
+}
+
+.logoutLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #f18d3e;
+  background: none;
+  border: 2px solid #f18d3e;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.logoutLink:hover {
+  background-color: #f18d3e;
+  color: #ffffff;
+}
+
+.logoutLink .navIcon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Hide label text on desktop to keep compact icon nav (optional: show labels) */
+.navLabel {
+  /* shown on all sizes */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .burger {
+    display: flex;
+  }
+
+  .navLinks {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 75%;
+    max-width: 300px;
+    height: 100vh;
+    background-color: #ffffff;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 80px 24px 24px;
+    gap: 4px;
+    transition: right 0.3s ease;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .navLinksOpen {
+    right: 0;
+  }
+
+  .navLink {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+  }
+
+  .logoutLink {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    text-align: left;
+    margin-top: 12px;
+  }
+
+  .logoTagline {
+    display: none;
+  }
+
+  .logoText {
+    font-size: 15px;
+  }
+}
