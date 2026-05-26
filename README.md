@@ -24,6 +24,134 @@ Créez un fichier `.env.local` à la racine du projet :
 NEXT_PUBLIC_API_URL=http://localhost:8000/api
 ```
 
+## URLs et Architecture Réseau
+
+### Comment fonctionnent les URLs dans ce projet ?
+
+L'application est construite sur une architecture **client-serveur** :
+
+- **Frontend (Next.js)** : Tourne sur `http://localhost:3000`
+- **Backend (API)** : Tourne sur `http://localhost:8000`
+
+### Rôle de NEXT_PUBLIC_API_URL
+
+La variable d'environnement `NEXT_PUBLIC_API_URL=http://localhost:8000/api` définit l'adresse de base de l'API backend.
+
+- Le préfixe `NEXT_PUBLIC_` rend cette variable **accessible au navigateur** (et au code client)
+- C'est l'URL racine vers laquelle tous les services envoient les requêtes HTTP
+- Elle pointe vers `http://localhost:8000/api`, ce qui signifie :
+  - `http://localhost:8000` = serveur backend
+  - `/api` = préfixe des routes API
+
+### Comment les requêtes sont envoyées ?
+
+1. **Depuis le navigateur** : Un composant React appelle un service (ex: `authService.login()`)
+2. **Service HTTP** : Le service utilise `apiClient.ts` (Axios) pour envoyer la requête
+3. **Construction de l'URL** : Axios combine `NEXT_PUBLIC_API_URL` avec la route spécifique
+   ```
+   NEXT_PUBLIC_API_URL + "/login"
+   = http://localhost:8000/api/login
+   ```
+4. **Réponse du serveur** : Le backend reçoit la requête et renvoie les données
+5. **Gestion des tokens** : Le token JWT est automatiquement ajouté aux en-têtes par les intercepteurs Axios
+
+### Exemple concret
+
+Lors d'une connexion :
+```typescript
+// Dans authService.ts
+export const login = (email: string, password: string) => {
+  return apiClient.post('/login', { email, password });
+  // URL finale envoyée : http://localhost:8000/api/login
+};
+```
+
+### Configuration en production
+
+En production, vous devez changer la variable d'environnement :
+
+```env
+NEXT_PUBLIC_API_URL=https://votre-api.com/api
+```
+
+Cela permet au navigateur de pointer vers votre API en production sans modifier le code.
+
+### Exemple avancé : API Open-Meteo (Météo)
+
+Le service `weatherService.ts` utilise une API publique pour récupérer les données météo. Voici comment l'URL est construite :
+
+```typescript
+const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params.toString()}`);
+```
+
+#### Décomposition de l'URL
+
+```
+https://api.open-meteo.com/v1/forecast?latitude=48.8&longitude=2.3&timezone=auto&daily=weathercode&start_date=2026-05-26&end_date=2026-05-26
+```
+
+**Parties de l'URL :**
+
+1. **Protocole** : `https://`
+   - Connexion sécurisée
+
+2. **Domaine** : `api.open-meteo.com`
+   - Serveur hébergeant l'API météo
+
+3. **Chemin** : `/v1/forecast`
+   - `v1` = version 1 de l'API
+   - `forecast` = endpoint pour les prévisions météo
+
+4. **Paramètres de requête** (après le `?`) :
+   - `latitude=48.8` → Latitude du point (Paris ≈ 48.8°N)
+   - `longitude=2.3` → Longitude du point (Paris ≈ 2.3°E)
+   - `timezone=auto` → Détecte automatiquement le fuseau horaire
+   - `daily=weathercode` → Demande le code météo quotidien
+   - `start_date=2026-05-26` → Date de début (format YYYY-MM-DD)
+   - `end_date=2026-05-26` → Date de fin (même jour pour un seul jour)
+
+#### Comment les paramètres sont construits
+
+```typescript
+const params = new URLSearchParams({
+  latitude: String(latitude),        // Coordonnée Y
+  longitude: String(longitude),      // Coordonnée X
+  timezone: 'auto',                  // Fuseau horaire automatique
+  daily: 'weathercode',              // Type de données demandées
+  start_date: date,                  // Date de début
+  end_date: date,                    // Date de fin
+});
+
+// params.toString() convertit cela en :
+// "latitude=48.8&longitude=2.3&timezone=auto&daily=weathercode&start_date=2026-05-26&end_date=2026-05-26"
+```
+
+#### Réponse de l'API
+
+L'API retourne un JSON avec la structure :
+
+```json
+{
+  "daily": {
+    "weathercode": [3],
+    "time": ["2026-05-26"]
+  }
+}
+```
+
+- `weathercode: [3]` = Code 3 = "Couvert" (nuageux)
+- Le service traduit ensuite ce code en description lisible
+
+#### Résumé du flux
+
+```
+Service → URLSearchParams → https://api.open-meteo.com/v1/forecast?params
+                            ↓
+                       Serveur répond avec JSON
+                            ↓
+                  WeatherCheckResult retourné
+```
+
 ## Structure du projet
 
 ```
