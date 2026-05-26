@@ -96,6 +96,14 @@ export const authService = {
       );
     }
   },
+  async resetPassword(token: string, password: string, confirm: string) {
+    const response = await fetch('http://localhost:8000/api/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, newPassword: password, confirmPassword: confirm }),
+    });
+    return response.json();
+}
 };
 
 export default authService;
