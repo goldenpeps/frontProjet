@@ -1,0 +1,271 @@
+.container {
+  min-height: calc(100vh - 67px);
+  background-color: #f1f1f1;
+  padding: 40px 20px;
+}
+
+.welcomeSection {
+  max-width: 1100px;
+  margin: 0 auto 32px;
+}
+
+.title {
+  color: #418123;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 15px;
+}
+
+.grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  display: block;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid #2eade4;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+}
+
+.cardIcon {
+  font-size: 36px;
+  margin-bottom: 14px;
+}
+
+.cardTitle {
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.cardDesc {
+  color: #888;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.planningSection {
+  max-width: 1100px;
+  margin: 28px auto 0;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 22px;
+}
+
+.planningHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.planningTitle {
+  margin: 0;
+  font-size: 20px;
+  color: #2f2f2f;
+}
+
+.planningLink {
+  color: #2eade4;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.planningLink:hover {
+  text-decoration: underline;
+}
+
+.planningState {
+  margin: 0;
+  color: #666;
+}
+
+.planningError {
+  margin: 0;
+  color: #b42318;
+  font-weight: 500;
+}
+
+.planningList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.planningItem {
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 12px;
+  background-color: #fafafa;
+}
+
+.planningItemTitle {
+  margin: 0 0 8px;
+  font-weight: 700;
+  color: #333;
+}
+
+.planningItemTime {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.planningItemTime + .planningItemTime {
+  margin-top: 4px;
+}
+
+.detailButton {
+  margin-top: 8px;
+  border: 1px solid #d0d5dd;
+  background-color: #ffffff;
+  color: #344054;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.detailButton:hover {
+  border-color: #2eade4;
+  color: #2eade4;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 16px;
+}
+
+.modal {
+  width: min(560px, 100%);
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+}
+
+.modalTitle {
+  margin: 0 0 10px;
+  font-size: 20px;
+  color: #1f2937;
+}
+
+.modalText {
+  margin: 0;
+  font-size: 14px;
+  color: #344054;
+  line-height: 1.5;
+}
+
+.modalText + .modalText {
+  margin-top: 8px;
+}
+
+.modalCloseButton {
+  margin-top: 14px;
+  border: 1px solid #d0d5dd;
+  background: #ffffff;
+  color: #344054;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.modalCloseButton:hover {
+  border-color: #2eade4;
+  color: #2eade4;
+}
+
+.pagination {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.paginationButton {
+  border: 1px solid #d0d5dd;
+  background-color: #fff;
+  color: #344054;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.paginationButton:hover:not(:disabled) {
+  border-color: #2eade4;
+  color: #2eade4;
+}
+
+.paginationButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.paginationInfo {
+  margin: 0;
+  font-size: 14px;
+  color: #667085;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: 20px 12px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .planningSection {
+    padding: 16px;
+    margin-top: 20px;
+  }
+
+  .planningHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .pagination {
+    justify-content: center;
+  }
+}

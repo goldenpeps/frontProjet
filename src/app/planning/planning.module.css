@@ -1,0 +1,236 @@
+.container {
+  min-height: calc(100vh - 67px);
+  background-color: #f1f1f1;
+  padding: 40px 20px;
+}
+
+.header {
+  max-width: 1200px;
+  margin: 0 auto 28px;
+}
+
+.title {
+  color: #418123;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 15px;
+}
+
+.weekNavigation {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.weekButton {
+  border: 1px solid #d0d5dd;
+  background-color: #ffffff;
+  color: #344054;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.weekButton:hover:not(:disabled) {
+  border-color: #87A515;
+  color: #87A515;
+}
+
+.weekButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.planning {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+}
+
+.dayColumn {
+  background-color: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dayHeader {
+  background-color: #87A515;
+  color: #ffffff;
+  padding: 14px 12px;
+  text-align: center;
+}
+
+.dayName {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dayDate {
+  display: block;
+  font-size: 12px;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.dayBody {
+  flex: 1;
+  padding: 16px 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.emptyText {
+  color: #bbb;
+  font-size: 13px;
+  text-align: center;
+  width: 100%;
+}
+
+.errorText {
+  color: #b42318;
+  font-size: 13px;
+  text-align: center;
+  width: 100%;
+}
+
+.interventionList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.interventionItem {
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  padding: 8px;
+  background-color: #fafafa;
+}
+
+.interventionTitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #333;
+}
+
+.interventionTime {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.detailButton {
+  margin-top: 8px;
+  border: 1px solid #d0d5dd;
+  background-color: #ffffff;
+  color: #344054;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.detailButton:hover {
+  border-color: #87A515;
+  color: #87A515;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 16px;
+}
+
+.modal {
+  width: min(560px, 100%);
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+}
+
+.modalTitle {
+  margin: 0 0 10px;
+  font-size: 20px;
+  color: #1f2937;
+}
+
+.modalText {
+  margin: 0;
+  font-size: 14px;
+  color: #344054;
+  line-height: 1.5;
+}
+
+.modalText + .modalText {
+  margin-top: 8px;
+}
+
+.modalCloseButton {
+  margin-top: 14px;
+  border: 1px solid #d0d5dd;
+  background: #ffffff;
+  color: #344054;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.modalCloseButton:hover {
+  border-color: #87A515;
+  color: #87A515;
+}
+
+/* Responsive: sur petits écrans, colonnes empilées */
+@media (max-width: 900px) {
+  .planning {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .container {
+    padding: 20px 12px;
+  }
+
+  .weekNavigation {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .planning {
+    grid-template-columns: 1fr;
+  }
+
+  .dayColumn {
+    min-height: 120px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+}
