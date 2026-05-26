@@ -97,7 +97,10 @@ export const authService = {
     }
   },
   async resetPassword(token: string, password: string, confirm: string) {
-    const response = await fetch('http://localhost:8000/api/reset-password', {
+
+    const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/reset-password`;
+
+    const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, newPassword: password, confirmPassword: confirm }),
