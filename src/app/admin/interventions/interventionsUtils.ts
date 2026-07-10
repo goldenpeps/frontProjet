@@ -10,6 +10,7 @@ export interface InterventionFormData {
   equipe_intervention_id: string;
   client_id: string;
   terrain_id: string;
+  type_prestation_id: string; // Changé en string pour le formulaire
   type_intervention: 'tonte' | 'ramassage' | 'autre';
 }
 
@@ -23,6 +24,7 @@ export const emptyInterventionForm: InterventionFormData = {
   equipe_intervention_id: '',
   client_id: '',
   terrain_id: '',
+   type_prestation_id: '', // Initialisé à vide
   type_intervention: 'autre',
 };
 
