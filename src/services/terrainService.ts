@@ -85,83 +85,11 @@ function extractTerrain(payload: unknown): Terrain {
   return normalizeTerrain(payload);
 }
 
-const TERRAIN_LIST_ENDPOINTS = [
-  '/admin/terrain/',
-  '/admin/terrain',
-  '/admin/terrains',
-  '/admin/terrains/',
-];
-
-const TERRAIN_ITEM_ENDPOINTS = ['/admin/terrain', '/admin/terrains'];
-
-async function getWithFallback<T>(endpoints: string[], parse: (payload: unknown) => T): Promise<T> {
-  let lastError: unknown;
-
-  for (const endpoint of endpoints) {
-    try {
-      const response = await apiClient.get<unknown>(endpoint);
-      return parse(response.data);
-    } catch (error) {
-      lastError = error;
-    }
-  }
-
-  const axiosError = lastError as AxiosError<ApiError>;
-  throw new Error(axiosError.response?.data?.message || 'Erreur API');
-}
-
-async function postWithFallback<T>(endpoints: string[], data: unknown, parse: (payload: unknown) => T): Promise<T> {
-  let lastError: unknown;
-
-  for (const endpoint of endpoints) {
-    try {
-      const response = await apiClient.post<unknown>(endpoint, data);
-      return parse(response.data);
-    } catch (error) {
-      lastError = error;
-    }
-  }
-
-  const axiosError = lastError as AxiosError<ApiError>;
-  throw new Error(axiosError.response?.data?.message || 'Erreur API');
-}
-
-async function putWithFallback<T>(baseEndpoints: string[], id: number, data: unknown, parse: (payload: unknown) => T): Promise<T> {
-  let lastError: unknown;
-
-  for (const baseEndpoint of baseEndpoints) {
-    try {
-      const response = await apiClient.put<unknown>(`${baseEndpoint}/${id}`, data);
-      return parse(response.data);
-    } catch (error) {
-      lastError = error;
-    }
-  }
-
-  const axiosError = lastError as AxiosError<ApiError>;
-  throw new Error(axiosError.response?.data?.message || 'Erreur API');
-}
-
-async function deleteWithFallback(baseEndpoints: string[], id: number): Promise<void> {
-  let lastError: unknown;
-
-  for (const baseEndpoint of baseEndpoints) {
-    try {
-      await apiClient.delete(`${baseEndpoint}/${id}`);
-      return;
-    } catch (error) {
-      lastError = error;
-    }
-  }
-
-  const axiosError = lastError as AxiosError<ApiError>;
-  throw new Error(axiosError.response?.data?.message || 'Erreur API');
-}
-
 export const terrainService = {
   async getAll(): Promise<Terrain[]> {
     try {
-      return await getWithFallback(TERRAIN_LIST_ENDPOINTS, extractTerrainArray);
+      const response = await apiClient.get<unknown>('/admin/terrains/');
+      return extractTerrainArray(response.data);
     } catch (error) {
       const axiosError = error as AxiosError<ApiError>;
       throw new Error(axiosError.response?.data?.message || 'Erreur lors de la récupération des terrains');
@@ -170,7 +98,8 @@ export const terrainService = {
 
   async create(data: CreateTerrainData): Promise<Terrain> {
     try {
-      return await postWithFallback(TERRAIN_ITEM_ENDPOINTS, data, extractTerrain);
+      const response = await apiClient.post<unknown>('/admin/terrain/', data);
+      return extractTerrain(response.data);
     } catch (error) {
       const axiosError = error as AxiosError<ApiError>;
       throw new Error(axiosError.response?.data?.message || 'Erreur lors de la création du terrain');
@@ -179,7 +108,8 @@ export const terrainService = {
 
   async update(id: number, data: UpdateTerrainData): Promise<Terrain> {
     try {
-      return await putWithFallback(TERRAIN_ITEM_ENDPOINTS, id, data, extractTerrain);
+      const response = await apiClient.put<unknown>(`/admin/terrain/${id}`, data);
+      return extractTerrain(response.data);
     } catch (error) {
       const axiosError = error as AxiosError<ApiError>;
       throw new Error(axiosError.response?.data?.message || 'Erreur lors de la mise à jour du terrain');
@@ -188,7 +118,7 @@ export const terrainService = {
 
   async remove(id: number): Promise<void> {
     try {
-      await deleteWithFallback(TERRAIN_ITEM_ENDPOINTS, id);
+      await apiClient.delete(`/admin/terrain/${id}`);
     } catch (error) {
       const axiosError = error as AxiosError<ApiError>;
       throw new Error(axiosError.response?.data?.message || 'Erreur lors de la suppression du terrain');

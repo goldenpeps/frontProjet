@@ -8,6 +8,7 @@ export interface Intervention {
   commentaire: string;
   materiel_utilise_id: number | null;
   equipe_intervention_id: number | null;
+  type_prestation_id?: number | null;
 }
 
 export interface PlanningSlot {
@@ -154,8 +155,6 @@ function normalizeUserPlanningIntervention(item: unknown): UserPlanningIntervent
   const obj = (item ?? {}) as Record<string, unknown>;
   const planningObj = (obj.planning ?? {}) as Record<string, unknown>;
   const commentaire = typeof obj.commentaire === 'string' ? obj.commentaire : '';
-
-  console.log('Raw item terrain:', obj.terrain);
 
   const clientObj = obj.client && typeof obj.client === 'object'
     ? (obj.client as Record<string, unknown>)

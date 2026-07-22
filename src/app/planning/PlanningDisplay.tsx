@@ -160,12 +160,11 @@ export function PlanningDetailsModal({
           {intervention.terrain.length
             ? intervention.terrain.map((terrain) => {
                 let adresseText = "";
-                console.log("Terrain adresse:", terrain.adresse);
                 if (terrain.adresse) {
                   if (Array.isArray(terrain.adresse)) {
                     adresseText = terrain.adresse.join(" ");
                   } else {
-                    adresseText = [terrain.adresse.rue, terrain.adresse.cp]
+                    adresseText = [terrain.adresse.adresse, terrain.adresse.cp]
                       .filter(Boolean)
                       .join(" ");
                   }
