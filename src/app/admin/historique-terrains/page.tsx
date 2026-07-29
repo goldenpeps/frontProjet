@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ProtectedRoute } from '@/components';
+import { ProtectedRoute, SearchBar } from '@/components';
 import { Navbar } from '@/components/Navbar';
 import {
   HistoriqueTerrain,
@@ -134,16 +134,15 @@ function HistoriqueTerrainsContent() {
           </button>
         </div>
 
-        <div className={styles.formGroup + ' ' + styles.formGroupFull} style={{ marginBottom: '16px' }}>
-          <label className={styles.formLabel}>Rechercher un historique</label>
-          <input
-            className={styles.formInput}
-            type="text"
-            placeholder="ID, terrain, dates, tonte/ramassage"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+        <SearchBar
+          label="Rechercher un historique"
+          placeholder="ID, terrain, dates, tonte/ramassage"
+          value={searchTerm}
+          onChange={setSearchTerm}
+          wrapperClassName={styles.formGroup + ' ' + styles.formGroupFull}
+          labelClassName={styles.formLabel}
+          inputClassName={styles.formInput}
+        />
 
         {error && <div className={styles.alertError}>{error}</div>}
         {refError && <div className={styles.alertWarning}>{refError}</div>}

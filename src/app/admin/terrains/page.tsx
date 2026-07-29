@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useMemo, useState } from 'react';
-import { ProtectedRoute } from '@/components';
+import { ProtectedRoute, SearchBar } from '@/components';
 import { Navbar } from '@/components/Navbar';
 import { Terrain, terrainService } from '@/services';
 import styles from '../admin.module.css';
@@ -10,6 +10,7 @@ import { TerrainsCards, TerrainsTable } from './TerrainsDisplay';
 import {
   emptyTerrainForm,
   extractGpsCoordinates,
+  filterTerrains,
   formatClientLabel,
   formatInterventionLabel,
   formatTerrainTypeLabel,
@@ -50,8 +51,14 @@ function TerrainsContent() {
   const [formLoading, setFormLoading] = useState(false);
 
   const [confirmTerrain, setConfirmTerrain] = useState<Terrain | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const selectedCoordinates = useMemo(() => extractGpsCoordinates(formData.coordonnees_gps), [formData.coordonnees_gps]);
+
+  const filteredTerrains = useMemo(
+    () => filterTerrains(terrains, searchTerm, clientById, terrainTypeById),
+    [terrains, searchTerm, clientById, terrainTypeById]
+  );
 
   const handleCreate = () => {
     clearMessages();
@@ -162,12 +169,22 @@ function TerrainsContent() {
         <div className={styles.header}>
           <div>
             <h1 className={styles.title}>Gestion des terrains</h1>
-            <p className={styles.subtitle}>{terrains.length} terrain{terrains.length > 1 ? 's' : ''}</p>
+            <p className={styles.subtitle}>{filteredTerrains.length} terrain{filteredTerrains.length > 1 ? 's' : ''}</p>
           </div>
           <button className={styles.btnCreate} onClick={handleCreate}>
             + Nouveau terrain
           </button>
         </div>
+
+        <SearchBar
+          label="Rechercher un terrain"
+          placeholder="Adresse, client, type ou ID"
+          value={searchTerm}
+          onChange={setSearchTerm}
+          wrapperClassName={styles.formGroup + ' ' + styles.formGroupFull}
+          labelClassName={styles.formLabel}
+          inputClassName={styles.formInput}
+        />
 
         {error && <div className={styles.alertError}>{error}</div>}
         {refError && <div className={styles.alertWarning}>{refError}</div>}
@@ -178,7 +195,7 @@ function TerrainsContent() {
         ) : (
           <>
             <TerrainsTable
-              terrains={terrains}
+              terrains={filteredTerrains}
               clientById={clientById}
               terrainTypeById={terrainTypeById}
               onEdit={handleEdit}
@@ -186,7 +203,7 @@ function TerrainsContent() {
             />
 
             <TerrainsCards
-              terrains={terrains}
+              terrains={filteredTerrains}
               clientById={clientById}
               terrainTypeById={terrainTypeById}
               onEdit={handleEdit}

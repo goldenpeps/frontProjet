@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import { ProtectedRoute } from '@/components';
+import { useMemo, useState } from 'react';
+import { ProtectedRoute, SearchBar } from '@/components';
 import { Navbar } from '@/components/Navbar';
 import { Client, clientService } from '@/services';
 import styles from '../admin.module.css';
 import { ClientsCards, ClientsTable } from './ClientsDisplay';
-import { ClientFormData, emptyClientForm, toClientFormData } from './clientsUtils';
+import { ClientFormData, emptyClientForm, filterClients, toClientFormData } from './clientsUtils';
 import { useClientsData } from './useClientsData';
 
 function ClientsContent() {
@@ -21,11 +21,15 @@ function ClientsContent() {
     clearMessages,
   } = useClientsData();
 
+  const [searchTerm, setSearchTerm] = useState('');
+
   const [showModal, setShowModal] = useState(false);
   const [editingClient, setEditingClient] = useState<Client | null>(null);
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState('');
   const [formData, setFormData] = useState<ClientFormData>(emptyClientForm);
+
+  const filteredClients = useMemo(() => filterClients(clients, searchTerm), [clients, searchTerm]);
 
   const handleCreate = () => {
     clearMessages();
@@ -76,12 +80,22 @@ function ClientsContent() {
         <div className={styles.header}>
           <div>
             <h1 className={styles.title}>Gestion des clients</h1>
-            <p className={styles.subtitle}>{clients.length} client{clients.length > 1 ? 's' : ''}</p>
+            <p className={styles.subtitle}>{filteredClients.length} client{filteredClients.length > 1 ? 's' : ''}</p>
           </div>
           <button className={styles.btnCreate} onClick={handleCreate}>
             + Nouveau client
           </button>
         </div>
+
+        <SearchBar
+          label="Rechercher un client"
+          placeholder="Nom, prénom, email, téléphone ou ID"
+          value={searchTerm}
+          onChange={setSearchTerm}
+          wrapperClassName={styles.formGroup + ' ' + styles.formGroupFull}
+          labelClassName={styles.formLabel}
+          inputClassName={styles.formInput}
+        />
 
         {error && <div className={styles.alertError}>{error}</div>}
         {successMsg && <div className={styles.alertSuccess}>{successMsg}</div>}
@@ -90,9 +104,9 @@ function ClientsContent() {
           <div className={styles.loader}>Chargement...</div>
         ) : (
           <>
-            <ClientsTable clients={clients} onEdit={handleEdit} />
+            <ClientsTable clients={filteredClients} onEdit={handleEdit} />
 
-            <ClientsCards clients={clients} onEdit={handleEdit} />
+            <ClientsCards clients={filteredClients} onEdit={handleEdit} />
           </>
         )}
       </div>

@@ -23,3 +23,17 @@ export function toFormData(prestation: Prestation): PrestationsFormData {
 export function formatPrice(value: number | string | null | undefined): string {
   return `${Number(value ?? 0).toFixed(2)} €`;
 }
+
+export function filterPrestations(prestations: Prestation[], searchTerm: string): Prestation[] {
+  const query = searchTerm.trim().toLowerCase();
+  if (!query) return prestations;
+
+  return prestations.filter((prestation) => {
+    return (
+      String(prestation.id).includes(query)
+      || prestation.nom.toLowerCase().includes(query)
+      || (prestation.description || '').toLowerCase().includes(query)
+      || formatPrice(prestation.prix_unitaire).toLowerCase().includes(query)
+    );
+  });
+}

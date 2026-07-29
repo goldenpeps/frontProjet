@@ -1,4 +1,4 @@
-import { Client, Intervention, TerrainType } from '@/services';
+import { Client, Intervention, Terrain, TerrainType } from '@/services';
 
 export interface TerrainFormData {
   superficie: string;
@@ -137,6 +137,29 @@ export function toNullableNumber(value: string): number | null {
   if (!trimmed) return null;
   const parsed = Number(trimmed);
   return Number.isNaN(parsed) ? null : parsed;
+}
+
+export function filterTerrains(
+  terrains: Terrain[],
+  searchTerm: string,
+  clientById: Map<number, Client>,
+  terrainTypeById: Map<number, TerrainType>
+): Terrain[] {
+  const query = searchTerm.trim().toLowerCase();
+  if (!query) return terrains;
+
+  return terrains.filter((terrain) => {
+    const client = terrain.client_id == null ? undefined : clientById.get(terrain.client_id);
+    const terrainType = terrain.type_terrain_id == null ? undefined : terrainTypeById.get(terrain.type_terrain_id);
+
+    return (
+      String(terrain.id).includes(query)
+      || formatAdresseDisplay(terrain.adresse).toLowerCase().includes(query)
+      || (terrain.commentaire || '').toLowerCase().includes(query)
+      || (client ? formatClientLabel(client).toLowerCase().includes(query) : false)
+      || (terrainType ? formatTerrainTypeLabel(terrainType).toLowerCase().includes(query) : false)
+    );
+  });
 }
 
 export function formatAdresseDisplay(adresse: unknown): string {

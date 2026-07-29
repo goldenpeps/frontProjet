@@ -28,3 +28,17 @@ export function formatTransportable(value: boolean | null | undefined): string {
   if (value == null) return '—';
   return value ? 'Oui' : 'Non';
 }
+
+export function filterMateriel(materiels: Materiel[], searchTerm: string): Materiel[] {
+  const query = searchTerm.trim().toLowerCase();
+  if (!query) return materiels;
+
+  return materiels.filter((materiel) => {
+    return (
+      String(materiel.id).includes(query)
+      || (materiel.type_materiel_libelle || '').toLowerCase().includes(query)
+      || (materiel.disponible ? 'disponible' : 'indisponible').includes(query)
+      || formatTransportable(materiel.type_materiel_transportable).toLowerCase().includes(query)
+    );
+  });
+}

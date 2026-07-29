@@ -35,6 +35,22 @@ export function toggleRole(currentRoles: string[], role: string): string[] {
   return ensureBaseRole(updatedRoles);
 }
 
+export function filterUsers(users: AdminUser[], searchTerm: string): AdminUser[] {
+  const query = searchTerm.trim().toLowerCase();
+  if (!query) return users;
+
+  return users.filter((user) => {
+    return (
+      String(user.id).includes(query)
+      || `${user.prenom || ''} ${user.nom || ''}`.trim().toLowerCase().includes(query)
+      || (user.email || '').toLowerCase().includes(query)
+      || (user.telephone || '').toLowerCase().includes(query)
+      || user.roles.some((role) => role.toLowerCase().includes(query))
+      || (user.is_active ? 'actif' : 'inactif').includes(query)
+    );
+  });
+}
+
 export function toFormData(user: AdminUser): UserFormData {
   return {
     email: user.email,
