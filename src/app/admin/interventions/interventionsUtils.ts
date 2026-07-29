@@ -229,6 +229,33 @@ export function daysBetween(older: Date, newer: Date): number {
   return Math.floor(diff / (1000 * 60 * 60 * 24));
 }
 
+export function filterInterventions(
+  interventions: Intervention[],
+  searchTerm: string,
+  clientById: Map<number, Client>,
+  terrains: Terrain[]
+): Intervention[] {
+  const query = searchTerm.trim().toLowerCase();
+  if (!query) return interventions;
+
+  const terrainById = new Map(terrains.map((terrain) => [terrain.id, terrain]));
+
+  return interventions.filter((intervention) => {
+    const meta = parsePlanningMeta(intervention.commentaire || '');
+    const client = meta ? clientById.get(meta.clientId) : undefined;
+    const terrain = meta ? terrainById.get(meta.terrainId) : undefined;
+
+    return (
+      String(intervention.id).includes(query)
+      || (intervention.commentaire || '').toLowerCase().includes(query)
+      || (client ? formatClientLabel(client).toLowerCase().includes(query) : false)
+      || (terrain ? formatTerrainLabel(terrain, client).toLowerCase().includes(query) : false)
+      || (meta?.type ?? '').toLowerCase().includes(query)
+      || formatDate(intervention.date_prevue).toLowerCase().includes(query)
+    );
+  });
+}
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, '&amp;')

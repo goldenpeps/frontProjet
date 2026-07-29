@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import { ProtectedRoute } from '@/components';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ProtectedRoute, SearchBar } from '@/components';
 import { Navbar } from '@/components/Navbar';
 import { Prestation, prestationService } from '@/services';
 import styles from '../admin.module.css';
+import { filterPrestations } from './prestationsUtils';
 
 interface PrestationsFormData {
   nom: string;
@@ -31,6 +32,9 @@ function PrestationsContent() {
   const [formLoading, setFormLoading] = useState(false);
 
   const [confirmPrestation, setConfirmPrestation] = useState<Prestation | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredPrestations = useMemo(() => filterPrestations(prestations, searchTerm), [prestations, searchTerm]);
 
   const fetchPrestations = useCallback(async () => {
     try {
@@ -126,12 +130,22 @@ function PrestationsContent() {
         <div className={styles.header}>
           <div>
             <h1 className={styles.title}>Types de prestation</h1>
-            <p className={styles.subtitle}>{prestations.length} prestation{prestations.length > 1 ? 's' : ''}</p>
+            <p className={styles.subtitle}>{filteredPrestations.length} prestation{filteredPrestations.length > 1 ? 's' : ''}</p>
           </div>
           <button className={styles.btnCreate} onClick={handleCreate}>
             + Nouvelle prestation
           </button>
         </div>
+
+        <SearchBar
+          label="Rechercher une prestation"
+          placeholder="Nom, description, prix ou ID"
+          value={searchTerm}
+          onChange={setSearchTerm}
+          wrapperClassName={styles.formGroup + ' ' + styles.formGroupFull}
+          labelClassName={styles.formLabel}
+          inputClassName={styles.formInput}
+        />
 
         {error && <div className={styles.alertError}>{error}</div>}
         {successMsg && <div className={styles.alertSuccess}>{successMsg}</div>}
@@ -152,7 +166,7 @@ function PrestationsContent() {
                   </tr>
                 </thead>
                 <tbody>
-                  {prestations.map((prestation) => (
+                  {filteredPrestations.map((prestation) => (
                     <tr key={prestation.id}>
                       <td>{prestation.id}</td>
                       <td><span className={styles.userName}>{prestation.nom}</span></td>
@@ -175,7 +189,7 @@ function PrestationsContent() {
             </div>
 
             <div className={styles.cardList}>
-              {prestations.map((prestation) => (
+              {filteredPrestations.map((prestation) => (
                 <div key={prestation.id} className={styles.userCard}>
                   <div className={styles.userCardHeader}>
                     <span className={styles.userName}>{prestation.nom}</span>

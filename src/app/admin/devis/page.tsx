@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { ProtectedRoute } from '@/components';
+import { useMemo, useState } from 'react';
+import { ProtectedRoute, SearchBar } from '@/components';
 import { Navbar } from '@/components/Navbar';
 import { Devis, devisService } from '@/services';
 import styles from '../admin.module.css';
@@ -9,6 +9,7 @@ import { DevisCards, DevisTable } from './DevisDisplay';
 import {
   DevisFormData,
   emptyDevisForm,
+  filterDevis,
   STATUS_OPTIONS,
   toDevisFormData,
   toNullableNumber,
@@ -34,6 +35,9 @@ function DevisContent() {
   const [formLoading, setFormLoading] = useState(false);
 
   const [confirmCancel, setConfirmCancel] = useState<Devis | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredDevis = useMemo(() => filterDevis(devis, searchTerm), [devis, searchTerm]);
 
   const handleCreate = () => {
     clearMessages();
@@ -107,12 +111,22 @@ function DevisContent() {
         <div className={styles.header}>
           <div>
             <h1 className={styles.title}>Gestion des devis</h1>
-            <p className={styles.subtitle}>{devis.length} devis</p>
+            <p className={styles.subtitle}>{filteredDevis.length} devis</p>
           </div>
           <button className={styles.btnCreate} onClick={handleCreate}>
             + Nouveau devis
           </button>
         </div>
+
+        <SearchBar
+          label="Rechercher un devis"
+          placeholder="Statut, montant, date, client ID ou ID"
+          value={searchTerm}
+          onChange={setSearchTerm}
+          wrapperClassName={styles.formGroup + ' ' + styles.formGroupFull}
+          labelClassName={styles.formLabel}
+          inputClassName={styles.formInput}
+        />
 
         {error && <div className={styles.alertError}>{error}</div>}
         {successMsg && <div className={styles.alertSuccess}>{successMsg}</div>}
@@ -121,9 +135,9 @@ function DevisContent() {
           <div className={styles.loader}>Chargement...</div>
         ) : (
           <>
-            <DevisTable devis={devis} onEdit={handleEdit} onCancelRequest={setConfirmCancel} />
+            <DevisTable devis={filteredDevis} onEdit={handleEdit} onCancelRequest={setConfirmCancel} />
 
-            <DevisCards devis={devis} onEdit={handleEdit} onCancelRequest={setConfirmCancel} />
+            <DevisCards devis={filteredDevis} onEdit={handleEdit} onCancelRequest={setConfirmCancel} />
           </>
         )}
       </div>

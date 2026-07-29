@@ -576,3 +576,32 @@
     text-align: center;
   }
 }
+
+@media (max-width: 480px) {
+  .overlay {
+    padding: 10px;
+  }
+
+  .modal {
+    padding: 16px;
+    margin: 0;
+    border-radius: 12px;
+  }
+
+  .modalTitle {
+    font-size: 18px;
+  }
+
+  .modalActions {
+    flex-direction: column-reverse;
+  }
+
+  .modalActions button {
+    width: 100%;
+  }
+
+  .rolesCheckboxes {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

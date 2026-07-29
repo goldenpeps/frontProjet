@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { ProtectedRoute } from '@/components';
+import { useMemo, useState } from 'react';
+import { ProtectedRoute, SearchBar } from '@/components';
 import { Navbar } from '@/components/Navbar';
 import { AdminUser, EquipeIntervention, equipeInterventionService, userService } from '@/services';
 import styles from '../admin.module.css';
@@ -9,6 +9,7 @@ import { EquipesCards, EquipesTable } from './EquipesInterventionsDisplay';
 import {
   emptyEquipeForm,
   EquipeFormData,
+  filterEquipes,
   formatUserLabel,
   toEquipeFormData,
   toggleUserSelection,
@@ -36,6 +37,12 @@ function EquipesInterventionsContent() {
   const [formLoading, setFormLoading] = useState(false);
 
   const [confirmEquipe, setConfirmEquipe] = useState<EquipeIntervention | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredEquipes = useMemo(
+    () => filterEquipes(equipes, searchTerm, usersById),
+    [equipes, searchTerm, usersById]
+  );
 
   const handleCreate = () => {
     clearMessages();
@@ -107,12 +114,22 @@ function EquipesInterventionsContent() {
         <div className={styles.header}>
           <div>
             <h1 className={styles.title}>Équipes d&apos;intervention</h1>
-            <p className={styles.subtitle}>{equipes.length} équipe{equipes.length > 1 ? 's' : ''}</p>
+            <p className={styles.subtitle}>{filteredEquipes.length} équipe{filteredEquipes.length > 1 ? 's' : ''}</p>
           </div>
           <button className={styles.btnCreate} onClick={handleCreate}>
             + Nouvelle équipe
           </button>
         </div>
+
+        <SearchBar
+          label="Rechercher une équipe"
+          placeholder="Commentaire, membre ou ID"
+          value={searchTerm}
+          onChange={setSearchTerm}
+          wrapperClassName={styles.formGroup + ' ' + styles.formGroupFull}
+          labelClassName={styles.formLabel}
+          inputClassName={styles.formInput}
+        />
 
         {error && <div className={styles.alertError}>{error}</div>}
         {successMsg && <div className={styles.alertSuccess}>{successMsg}</div>}
@@ -122,14 +139,14 @@ function EquipesInterventionsContent() {
         ) : (
           <>
             <EquipesTable
-              equipes={equipes}
+              equipes={filteredEquipes}
               usersById={usersById}
               onEdit={handleEdit}
               onDeleteRequest={setConfirmEquipe}
             />
 
             <EquipesCards
-              equipes={equipes}
+              equipes={filteredEquipes}
               usersById={usersById}
               onEdit={handleEdit}
               onDeleteRequest={setConfirmEquipe}

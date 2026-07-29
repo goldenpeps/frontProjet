@@ -1,13 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { ProtectedRoute } from '@/components';
+import { useMemo, useState } from 'react';
+import { ProtectedRoute, SearchBar } from '@/components';
 import { Navbar } from '@/components/Navbar';
 import { Materiel, materielService } from '@/services';
 import styles from '../admin.module.css';
 import { MaterielCards, MaterielTable } from './MaterielDisplay';
 import {
   emptyMaterielForm,
+  filterMateriel,
   MaterielFormData,
   toMaterielFormData,
   toNullableNumber,
@@ -34,6 +35,9 @@ function MaterielContent() {
   const [formLoading, setFormLoading] = useState(false);
 
   const [confirmMateriel, setConfirmMateriel] = useState<Materiel | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredMateriels = useMemo(() => filterMateriel(materiels, searchTerm), [materiels, searchTerm]);
 
   const handleCreate = () => {
     clearMessages();
@@ -102,12 +106,22 @@ function MaterielContent() {
         <div className={styles.header}>
           <div>
             <h1 className={styles.title}>Gestion du matériel</h1>
-            <p className={styles.subtitle}>{materiels.length} élément{materiels.length > 1 ? 's' : ''} matériel</p>
+            <p className={styles.subtitle}>{filteredMateriels.length} élément{filteredMateriels.length > 1 ? 's' : ''} matériel</p>
           </div>
           <button className={styles.btnCreate} onClick={handleCreate}>
             + Nouveau matériel
           </button>
         </div>
+
+        <SearchBar
+          label="Rechercher un matériel"
+          placeholder="Type, disponibilité ou ID"
+          value={searchTerm}
+          onChange={setSearchTerm}
+          wrapperClassName={styles.formGroup + ' ' + styles.formGroupFull}
+          labelClassName={styles.formLabel}
+          inputClassName={styles.formInput}
+        />
 
         {error && <div className={styles.alertError}>{error}</div>}
         {successMsg && <div className={styles.alertSuccess}>{successMsg}</div>}
@@ -117,13 +131,13 @@ function MaterielContent() {
         ) : (
           <>
             <MaterielTable
-              materiels={materiels}
+              materiels={filteredMateriels}
               onEdit={handleEdit}
               onDeleteRequest={setConfirmMateriel}
             />
 
             <MaterielCards
-              materiels={materiels}
+              materiels={filteredMateriels}
               onEdit={handleEdit}
               onDeleteRequest={setConfirmMateriel}
             />

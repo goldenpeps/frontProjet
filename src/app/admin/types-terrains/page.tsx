@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ProtectedRoute } from '@/components';
+import { ProtectedRoute, SearchBar } from '@/components';
 import { Navbar } from '@/components/Navbar';
 import { TerrainType, terrainTypeService } from '@/services';
 import styles from '../admin.module.css';
@@ -112,16 +112,15 @@ function TypesTerrainsContent() {
           </button>
         </div>
 
-        <div className={styles.formGroup + ' ' + styles.formGroupFull} style={{ marginBottom: '16px' }}>
-          <label className={styles.formLabel}>Rechercher un type</label>
-          <input
-            className={styles.formInput}
-            type="text"
-            placeholder="Nom, description ou ID"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+        <SearchBar
+          label="Rechercher un type"
+          placeholder="Nom, description ou ID"
+          value={searchTerm}
+          onChange={setSearchTerm}
+          wrapperClassName={styles.formGroup + ' ' + styles.formGroupFull}
+          labelClassName={styles.formLabel}
+          inputClassName={styles.formInput}
+        />
 
         {error && <div className={styles.alertError}>{error}</div>}
         {successMsg && <div className={styles.alertSuccess}>{successMsg}</div>}

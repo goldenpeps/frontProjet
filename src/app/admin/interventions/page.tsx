@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { ProtectedRoute } from "@/components";
+import { useMemo, useState } from "react";
+import { ProtectedRoute, SearchBar } from "@/components";
 import { Navbar } from "@/components/Navbar";
 import {
   Intervention,
@@ -24,6 +24,7 @@ import {
   extractGpsCoordinates,
   extractLastMowingDate,
   extractTimePart,
+  filterInterventions,
   formatClientLabel,
   formatEquipeLabel,
   formatTerrainLabel,
@@ -50,6 +51,7 @@ function InterventionsContent() {
   const [formLoading, setFormLoading] = useState(false);
   const [confirmIntervention, setConfirmIntervention] =
     useState<Intervention | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const {
     interventions,
@@ -71,6 +73,11 @@ function InterventionsContent() {
     fetchInterventions,
     clearMessages,
   } = useInterventionsData(formData.client_id);
+
+  const filteredInterventions = useMemo(
+    () => filterInterventions(interventions, searchTerm, clientById, terrains),
+    [interventions, searchTerm, clientById, terrains],
+  );
 
   const handleCreate = () => {
     clearMessages();
@@ -399,14 +406,24 @@ function InterventionsContent() {
           <div>
             <h1 className={styles.title}>Gestion des interventions</h1>
             <p className={styles.subtitle}>
-              {interventions.length} intervention
-              {interventions.length > 1 ? "s" : ""}
+              {filteredInterventions.length} intervention
+              {filteredInterventions.length > 1 ? "s" : ""}
             </p>
           </div>
           <button className={styles.btnCreate} onClick={handleCreate}>
             + Nouvelle intervention
           </button>
         </div>
+
+        <SearchBar
+          label="Rechercher une intervention"
+          placeholder="Client, terrain, type, commentaire, date ou ID"
+          value={searchTerm}
+          onChange={setSearchTerm}
+          wrapperClassName={styles.formGroup + " " + styles.formGroupFull}
+          labelClassName={styles.formLabel}
+          inputClassName={styles.formInput}
+        />
 
         {error && <div className={styles.alertError}>{error}</div>}
         {successMsg && <div className={styles.alertSuccess}>{successMsg}</div>}
@@ -433,7 +450,7 @@ function InterventionsContent() {
                   </tr>
                 </thead>
                 <tbody>
-                  {interventions.map((intervention) => (
+                  {filteredInterventions.map((intervention) => (
                     <tr key={intervention.id}>
                       <InterventionTableRowCells
                         intervention={intervention}
@@ -452,7 +469,7 @@ function InterventionsContent() {
             </div>
 
             <div className={styles.cardList}>
-              {interventions.map((intervention) => (
+              {filteredInterventions.map((intervention) => (
                 <InterventionCard
                   key={intervention.id}
                   intervention={intervention}

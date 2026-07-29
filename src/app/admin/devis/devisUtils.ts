@@ -35,6 +35,22 @@ export function formatAmount(value: number | string | null | undefined): string 
   return `${Number(value ?? 0).toFixed(2)} €`;
 }
 
+export function filterDevis(devis: Devis[], searchTerm: string): Devis[] {
+  const query = searchTerm.trim().toLowerCase();
+  if (!query) return devis;
+
+  return devis.filter((item) => {
+    return (
+      String(item.id).includes(query)
+      || String(item.client_id ?? '').includes(query)
+      || String(item.intervention_id ?? '').includes(query)
+      || (item.status || '').toLowerCase().includes(query)
+      || formatAmount(item.montant_total).toLowerCase().includes(query)
+      || formatDate(item.date_creation).toLowerCase().includes(query)
+    );
+  });
+}
+
 export function toDevisFormData(item: Devis): DevisFormData {
   return {
     date_creation: item.date_creation || '',

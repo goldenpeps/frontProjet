@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { ProtectedRoute } from '@/components';
+import { ProtectedRoute, SearchBar } from '@/components';
 import { Navbar } from '@/components/Navbar';
 import { userService, AdminUser, CreateUserData, UpdateUserData } from '@/services';
 import styles from '../admin.module.css';
@@ -11,6 +11,7 @@ import { useUsersData } from './useUsersData';
 import {
   AVAILABLE_ROLES,
   emptyUserForm,
+  filterUsers,
   toggleRole,
   toFormData,
   UserFormData,
@@ -36,6 +37,9 @@ function UsersContent() {
   const [formLoading, setFormLoading] = useState(false);
 
   const [confirmUser, setConfirmUser] = useState<AdminUser | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredUsers = useMemo(() => filterUsers(users, searchTerm), [users, searchTerm]);
 
   const handleCreate = () => {
     clearMessages();
@@ -140,12 +144,22 @@ function UsersContent() {
         <div className={styles.header}>
           <div>
             <h1 className={styles.title}>Gestion des utilisateurs</h1>
-            <p className={styles.subtitle}>{users.length} utilisateur{users.length > 1 ? 's' : ''}</p>
+            <p className={styles.subtitle}>{filteredUsers.length} utilisateur{filteredUsers.length > 1 ? 's' : ''}</p>
           </div>
           <button className={styles.btnCreate} onClick={handleCreate}>
             + Nouvel utilisateur
           </button>
         </div>
+
+        <SearchBar
+          label="Rechercher un utilisateur"
+          placeholder="Nom, email, téléphone, rôle ou statut"
+          value={searchTerm}
+          onChange={setSearchTerm}
+          wrapperClassName={styles.formGroup + ' ' + styles.formGroupFull}
+          labelClassName={styles.formLabel}
+          inputClassName={styles.formInput}
+        />
 
         {error && <div className={styles.alertError}>{error}</div>}
         {successMsg && <div className={styles.alertSuccess}>{successMsg}</div>}
@@ -155,14 +169,14 @@ function UsersContent() {
         ) : (
           <>
             <UsersTable
-              users={users}
+              users={filteredUsers}
               currentUserId={currentUser?.id}
               onEdit={handleEdit}
               onToggleRequest={setConfirmUser}
             />
 
             <UsersCards
-              users={users}
+              users={filteredUsers}
               currentUserId={currentUser?.id}
               onEdit={handleEdit}
               onToggleRequest={setConfirmUser}
