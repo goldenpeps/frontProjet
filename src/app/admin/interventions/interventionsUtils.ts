@@ -37,6 +37,21 @@ export interface GpsCoordinates {
   longitude: number;
 }
 
+export interface WeatherErrorContext {
+  message: string;
+  terrainId: number;
+  clientId: number;
+  date: string;
+  gps: GpsCoordinates | null;
+}
+
+export function logWeatherError(context: WeatherErrorContext): void {
+  console.error('[WEATHER_API_ERROR]', {
+    timestamp: new Date().toISOString(),
+    ...context,
+  });
+}
+
 export interface PlanningMeta {
   type: 'tonte' | 'ramassage' | 'autre';
   clientId: number;
