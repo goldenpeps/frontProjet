@@ -30,6 +30,7 @@ import {
   formatTerrainLabel,
   getTerrainNameAndAddress,
   getWeatherEmoji,
+  logWeatherError,
   parsePlanningMeta,
   showAlertifyConfirmation,
   stripPlanningMeta,
@@ -292,6 +293,15 @@ function InterventionsContent() {
       } catch (weatherError) {
         const weatherMessage =
           weatherError instanceof Error ? weatherError.message : "";
+
+        logWeatherError({
+          message: weatherMessage || "Erreur inconnue lors de la verification meteo",
+          terrainId,
+          clientId,
+          date: formData.date_prevue,
+          gps: gpsCoordinates,
+        });
+
         const noForecastData =
           /donnees meteo indisponibles|impossible de recuperer la meteo/i.test(
             weatherMessage,

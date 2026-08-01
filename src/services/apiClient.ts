@@ -25,7 +25,7 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Intercepteur de réponse pour gérer les erreurs d'authentification
+// Intercepteur de réponse pour gérer les erreurs d'authentification et de connexion
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
@@ -35,7 +35,26 @@ apiClient.interceptors.response.use(
       if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
         window.location.href = '/login';
       }
+      return Promise.reject(error);
     }
+
+    // Pas de réponse reçue: backend injoignable (réseau coupé, serveur arrêté) ou timeout
+    if (!error.response) {
+      const isTimeout = error.code === 'ECONNABORTED';
+
+      console.error('[BACKEND_UNREACHABLE]', {
+        timestamp: new Date().toISOString(),
+        url: error.config?.url,
+        method: error.config?.method,
+        reason: isTimeout ? 'timeout' : 'network_error',
+        message: error.message,
+      });
+
+      error.message = isTimeout
+        ? 'Le serveur met trop de temps à répondre, réessayez plus tard.'
+        : 'Le serveur est actuellement injoignable, vérifiez votre connexion ou réessayez plus tard.';
+    }
+
     return Promise.reject(error);
   }
 );
