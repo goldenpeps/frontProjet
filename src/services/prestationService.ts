@@ -99,7 +99,7 @@ function extractPrestation(payload: unknown): Prestation {
 export const prestationService = {
   async getAll(): Promise<Prestation[]> {
     try {
-      const response = await apiClient.get<unknown>('/admin/type-prestations');
+      const response = await apiClient.get<unknown>('/admin/type-prestations/');
       return extractPrestationArray(response.data);
     } catch (error) {
       const axiosError = error as AxiosError<ApiError>;

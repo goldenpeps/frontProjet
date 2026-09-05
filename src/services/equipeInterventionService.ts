@@ -24,7 +24,6 @@ interface ApiError {
 
 const LIST_ENDPOINTS = [
   '/admin/equipe-intervention/search',
-  '/admin/equipe-intervention',
 ];
 
 const CREATE_ENDPOINTS = [
