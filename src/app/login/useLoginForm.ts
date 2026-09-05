@@ -25,13 +25,17 @@ export function useLoginForm(): UseLoginFormResult {
   const hasRedirected = useRef(false);
 
   useEffect(() => {
-    if (isAuthenticated() && !hasRedirected.current) {
-      hasRedirected.current = true;
-      router.replace('/dashboard');
-      return;
-    }
+    const checkAuth = () => {
+      if (isAuthenticated() && !hasRedirected.current) {
+        hasRedirected.current = true;
+        router.replace('/dashboard');
+        return;
+      }
 
-    setCheckingAuth(false);
+      setCheckingAuth(false);
+    };
+
+    checkAuth();
   }, [router]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {

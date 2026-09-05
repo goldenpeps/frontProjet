@@ -18,7 +18,7 @@ export default function Home() {
     } else {
       router.replace('/login');
     }
-  }, []);
+  }, [router]);
 
   return (
     <div style={{ 

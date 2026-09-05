@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { authService } from '@/services'; // Assure-toi que cette fonction existe dans ton service
+import { authService } from '@/services';
 import styles from '../reset-password.module.css';
 
 export default function ResetPasswordPage() {
@@ -34,19 +34,7 @@ export default function ResetPasswordPage() {
     setIsLoading(true);
 
     try {
-      // Appel à ton API Symfony
-      const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/reset-password`;
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          token: token,
-          newPassword: password,
-          confirmPassword: confirmPassword
-        }),
-      });
-
-      const data = await response.json();
+      const data = await authService.resetPassword(token, password, confirmPassword);
 
       if (data.success) {
         setMessage('Mot de passe réinitialisé avec succès ! Redirection...');
@@ -56,7 +44,7 @@ export default function ResetPasswordPage() {
       } else {
         setError(data.message || 'Une erreur est survenue');
       }
-    } catch (err) {
+    } catch {
       setError('Erreur de connexion au serveur');
     } finally {
       setIsLoading(false);

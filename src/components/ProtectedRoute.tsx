@@ -26,7 +26,7 @@ export function ProtectedRoute({ children, requiredRoles = [] }: ProtectedRouteP
       hasRedirected.current = true;
       router.replace('/login');
     }
-  }, [isLoading, isAuthenticated]);
+  }, [isLoading, isAuthenticated, router]);
 
   // Vérification des rôles si requis
   useEffect(() => {
@@ -42,7 +42,7 @@ export function ProtectedRoute({ children, requiredRoles = [] }: ProtectedRouteP
         router.replace('/dashboard');
       }
     }
-  }, [isLoading, isAuthenticated, user?.roles]);
+  }, [isLoading, isAuthenticated, user?.roles, requiredRoles, router]);
 
   // Affichage du loader pendant le chargement
   if (isLoading) {
