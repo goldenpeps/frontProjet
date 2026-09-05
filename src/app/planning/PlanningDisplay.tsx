@@ -4,8 +4,10 @@ import {
   PlanningWeekDateItem,
   formatClientLabel,
   formatHour,
+  formatInterventionTypeLabel,
   formatMaterielLabel,
   formatTerrainLabel,
+  getInterventionType,
 } from "./planningUtils";
 
 interface PlanningHeaderProps {
@@ -90,37 +92,48 @@ export function PlanningGrid({
               <p className={styles.errorText}>Erreur de planning</p>
             ) : interventionsByDay[index]?.length ? (
               <div className={styles.interventionList}>
-                {interventionsByDay[index].map((intervention) => (
-                  <div
-                    key={intervention.id}
-                    className={styles.interventionItem}
-                  >
-                    <p className={styles.interventionTitle}>
-                      {/* #{intervention.id} */}
-                      {/* client */}
-                      {formatClientLabel(intervention)}
-                      {/* terrain */}
-                      
-                    </p>
-                    <p className={styles.interventionTime}>
-                      {formatHour(
-                        intervention.planning.debut ?? intervention.date_prevue,
-                      )}{" "}
-                      -{" "}
-                      {formatHour(
-                        intervention.planning.fin ??
-                          intervention.date_realisation,
-                      )}
-                    </p>
-                    <button
-                      type="button"
-                      className={styles.detailButton}
-                      onClick={() => onSelectIntervention(intervention)}
+                {interventionsByDay[index].map((intervention) => {
+                  const interventionType = getInterventionType(intervention);
+                  const typeBadgeClass = {
+                    tonte: styles.typeTonte,
+                    ramassage: styles.typeRamassage,
+                    autre: styles.typeAutre,
+                  }[interventionType];
+
+                  return (
+                    <div
+                      key={intervention.id}
+                      className={styles.interventionItem}
                     >
-                      Voir détails
-                    </button>
-                  </div>
-                ))}
+                      <span className={`${styles.typeBadge} ${typeBadgeClass}`}>
+                        {formatInterventionTypeLabel(interventionType)}
+                      </span>
+                      <p className={styles.interventionTitle}>
+                        {formatClientLabel(intervention)}
+                      </p>
+                      <p className={styles.interventionTerrain}>
+                        {formatTerrainLabel(intervention)}
+                      </p>
+                      <p className={styles.interventionTime}>
+                        {formatHour(
+                          intervention.planning.debut ?? intervention.date_prevue,
+                        )}{" "}
+                        -{" "}
+                        {formatHour(
+                          intervention.planning.fin ??
+                            intervention.date_realisation,
+                        )}
+                      </p>
+                      <button
+                        type="button"
+                        className={styles.detailButton}
+                        onClick={() => onSelectIntervention(intervention)}
+                      >
+                        Voir détails
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
             ) : (
               <p className={styles.emptyText}>Aucune intervention</p>
@@ -140,6 +153,13 @@ export function PlanningDetailsModal({
     return null;
   }
 
+  const interventionType = getInterventionType(intervention);
+  const typeBadgeClass = {
+    tonte: styles.typeTonte,
+    ramassage: styles.typeRamassage,
+    autre: styles.typeAutre,
+  }[interventionType];
+
   return (
     <div className={styles.modalOverlay} onClick={onClose} role="presentation">
       <div
@@ -150,7 +170,9 @@ export function PlanningDetailsModal({
         aria-labelledby="planning-detail-title"
       >
         <h2 id="planning-detail-title" className={styles.modalTitle}>
-          {/* Intervention #{intervention.id} */}
+          <span className={`${styles.typeBadge} ${typeBadgeClass}`}>
+            {formatInterventionTypeLabel(interventionType)}
+          </span>
         </h2>
         <p className={styles.modalText}>
           <strong>Client:</strong> {formatClientLabel(intervention)}

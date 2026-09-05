@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { ProtectedRoute, SearchBar } from '@/components';
 import { Navbar } from '@/components/Navbar';
-import { AdminUser, EquipeIntervention, equipeInterventionService, userService } from '@/services';
+import { EquipeIntervention, equipeInterventionService } from '@/services';
 import styles from '../admin.module.css';
 import { EquipesCards, EquipesTable } from './EquipesInterventionsDisplay';
 import {

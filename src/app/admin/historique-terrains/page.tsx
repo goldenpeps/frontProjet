@@ -244,7 +244,7 @@ function HistoriqueTerrainsContent() {
         <div className={styles.overlay} onClick={() => setConfirmHistorique(null)}>
           <div className={styles.modal + ' ' + styles.modalSmall} onClick={(e) => e.stopPropagation()}>
             <h2 className={styles.modalTitle}>Confirmation</h2>
-            <p className={styles.confirmText}>Supprimer l'historique #{confirmHistorique.id} ?</p>
+            <p className={styles.confirmText}>Supprimer l&apos;historique #{confirmHistorique.id} ?</p>
             <div className={styles.modalActions}>
               <button className={styles.btnCancel} onClick={() => setConfirmHistorique(null)}>
                 Annuler

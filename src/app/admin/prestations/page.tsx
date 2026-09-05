@@ -262,7 +262,7 @@ function PrestationsContent() {
         <div className={styles.overlay} onClick={() => setConfirmPrestation(null)}>
           <div className={styles.modal + ' ' + styles.modalSmall} onClick={(e) => e.stopPropagation()}>
             <h2 className={styles.modalTitle}>Confirmation</h2>
-            <p className={styles.confirmText}>Supprimer la prestation "{confirmPrestation.nom}" ?</p>
+            <p className={styles.confirmText}>Supprimer la prestation &quot;{confirmPrestation.nom}&quot; ?</p>
             <div className={styles.modalActions}>
               <button className={styles.btnCancel} onClick={() => setConfirmPrestation(null)}>
                 Annuler

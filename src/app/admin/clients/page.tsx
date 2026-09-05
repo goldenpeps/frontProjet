@@ -15,7 +15,6 @@ function ClientsContent() {
     loading,
     error,
     successMsg,
-    setError,
     setSuccessMsg,
     fetchClients,
     clearMessages,

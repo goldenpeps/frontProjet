@@ -37,7 +37,6 @@ import {
   toDateTimeLocalInput,
   toNullableNumber,
   type InterventionFormData,
-  type GpsCoordinates,
 } from "./interventionsUtils";
 import { useInterventionsData } from "./useInterventionsData";
 
@@ -182,15 +181,6 @@ function InterventionsContent() {
     // );
     // const hasTonte = prestationNames.has('tonte');
     // const hasRamassage = prestationNames.has('ramassage');
-    const nomNorm = selectedPrestation.nom.toLowerCase();
-    const isTonte = nomNorm.includes("tonte");
-    const isRamassage = nomNorm.includes("ramassage");
-    const typeIntervention = isTonte
-      ? "tonte"
-      : isRamassage
-      ? "ramassage"
-      : "autre";
-
     // if (!hasTonte || !hasRamassage) {
     //   setFormError('Les types de prestation "Tonte" et "Ramassage" doivent exister avant de planifier une intervention');
     //   return;
@@ -553,7 +543,7 @@ function InterventionsContent() {
                 />
               </div>
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Type d'intervention</label>
+                <label className={styles.formLabel}>Type d&apos;intervention</label>
                 <select
                   className={styles.formInput}
                   value={formData.type_prestation_id}
@@ -629,7 +619,7 @@ function InterventionsContent() {
               </div>
               <div className={styles.formGroup}>
                 <label className={styles.formLabel}>
-                  Équipe d'intervention
+                  Équipe d&apos;intervention
                 </label>
                 <select
                   className={styles.formInput}
@@ -728,7 +718,7 @@ function InterventionsContent() {
           >
             <h2 className={styles.modalTitle}>Confirmation</h2>
             <p className={styles.confirmText}>
-              Supprimer l'intervention #{confirmIntervention.id} ?
+              Supprimer l&apos;intervention #{confirmIntervention.id} ?
             </p>
             <div className={styles.modalActions}>
               <button

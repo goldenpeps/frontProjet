@@ -36,7 +36,7 @@ export default function ForgotPasswordPage() {
       if (response.success) {
         setMessage('Un email de réinitialisation a été envoyé si cette adresse existe.');
       }
-    } catch (err) {
+    } catch {
       // On affiche toujours un message de succès pour éviter l'énumération d'emails
       setMessage('Un email de réinitialisation a été envoyé si cette adresse existe.');
     } finally {

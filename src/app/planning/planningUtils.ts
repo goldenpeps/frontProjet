@@ -70,6 +70,27 @@ export function formatTerrainLabel(intervention: UserPlanningIntervention): stri
     .join(', ');
 }
 
+export type InterventionType = 'tonte' | 'ramassage' | 'autre';
+
+const META_TYPE_REGEX = /\[TYPE:(tonte|ramassage|autre)\]/i;
+
+/**
+ * Le type d'intervention (tonte / ramassage / autre) n'est pas une colonne dédiée
+ * côté back: il est encodé dans le commentaire via un tag [TYPE:...] (voir
+ * buildCommentWithMeta dans admin/interventions/interventionsUtils.ts).
+ */
+export function getInterventionType(intervention: UserPlanningIntervention): InterventionType {
+  const match = intervention.commentaire?.match(META_TYPE_REGEX);
+  const type = match?.[1]?.toLowerCase();
+  return type === 'tonte' || type === 'ramassage' ? type : 'autre';
+}
+
+export function formatInterventionTypeLabel(type: InterventionType): string {
+  if (type === 'tonte') return 'Tonte';
+  if (type === 'ramassage') return 'Ramassage';
+  return 'Autre';
+}
+
 export function formatMaterielLabel(intervention: UserPlanningIntervention): string {
   if (!intervention.materiels.length) return 'Non renseigné';
 

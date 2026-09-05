@@ -70,7 +70,7 @@ export const authService = {
         return response.data.user;
       }
       return null;
-    } catch (error) {
+    } catch {
       return null;
     }
   },
