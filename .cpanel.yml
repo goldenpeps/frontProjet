@@ -1,0 +1,14 @@
+---
+# Déploiement cPanel (Git Version Control > Deployment) déclenché à chaque push.
+# ⚠️ Avant le premier push : remplacer USER et le chemin ci-dessous par le vrai
+# chemin de déploiement de ton compte cPanel, et vérifier via SSH le chemin réel
+# du binaire npm (`which npm`), qui peut différer selon la version Node choisie
+# dans "Setup Node.js App".
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/USER/frontProject/
+    - /bin/cp -R * $DEPLOYPATH
+    - /usr/local/bin/npm install --prefix $DEPLOYPATH
+    - /usr/local/bin/npm run build --prefix $DEPLOYPATH
+    - /bin/mkdir -p $DEPLOYPATH/tmp
+    - /bin/touch $DEPLOYPATH/tmp/restart.txt
